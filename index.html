@@ -1,39 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Materiały do nauki polskiego</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f3f5f8;
-      color: #203047;
-      max-width: 720px;
-      margin: 60px auto;
-      padding: 0 24px;
-    }
-    h1 { font-size: 30px; }
-    a {
-      display: block;
-      margin: 16px 0;
-      padding: 24px;
-      background: white;
-      border: 1px solid #dce3ec;
-      border-radius: 12px;
-      color: #1759a5;
-      text-decoration: none;
-      font-size: 22px;
-    }
-    a:hover, a:focus { background: #e7f0ff; }
+    *{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#f3f5f8;color:#203047;max-width:800px;margin:60px auto;padding:0 24px}h1{font-size:clamp(25px,5vw,34px);line-height:1.25;margin-bottom:14px}p{line-height:1.6}header{margin-bottom:28px}.tools{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}input{flex:1;min-width:180px;padding:13px;border:1px solid #bbc9da;border-radius:9px;font:inherit}button{padding:12px 18px;border:1px solid #bbc9da;border-radius:9px;background:white;color:#1759a5;font:inherit;cursor:pointer}button:disabled{opacity:.6;cursor:wait}a.card{display:block;margin:14px 0;padding:24px;background:white;border:1px solid #dce3ec;border-radius:12px;color:#1759a5;text-decoration:none;font-size:22px;line-height:1.35}a.card:hover{background:#e7f0ff}a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #1759a5;outline-offset:3px}.filename{display:block;font-size:13px;color:#52647c;margin-top:8px;overflow-wrap:anywhere}#status{font-size:14px;color:#52647c}footer{margin:32px 0;font-size:13px;color:#52647c}
   </style>
 </head>
 <body>
-  <h1>Materiały do nauki języka polskiego</h1>
-  <p>Wybierz temat:</p>
-
-  <a href="Biernik-animacja.html">Biernik — animacja</a>
-  <a href="Dopelniacz-animacja.html">Dopełniacz — animacja</a>
-  <a href="Czas%20przeszly%20-%20offline.html">Czas przeszły</a>
+  <header><h1>Materiały do nauki języka polskiego</h1><p>Wybierz temat i otwórz ćwiczenie.</p></header>
+  <div class="tools"><input id="search" type="search" aria-label="Szukaj materiału" placeholder="Szukaj tematu…"><button id="refresh" type="button">Odśwież listę</button></div>
+  <p id="status" role="status" aria-live="polite">Pobieranie listy materiałów…</p>
+  <nav id="materials" aria-label="Materiały do nauki"></nav>
+  <noscript>Włącz JavaScript, aby wyświetlić automatyczny spis materiałów.</noscript>
+  <footer>Spis aktualizuje się przy otwarciu strony. Nowe ćwiczenia mogą wymagać kilku minut na opublikowanie.</footer>
+  <script>
+  'use strict';
+  // Nowe pliki .html i .htm dodawaj obok index.html w repozytorium Polski.
+  const API = 'https://api.github.com/repos/Judhiszthira/Polski/contents/?ref=main';
+  const BASE = 'https://judhiszthira.github.io/Polski/';
+  const CACHE = 'polski-materialy-v1';
+  const TITLES = {
+    'Biernik-animacja.html': 'Biernik — animacja',
+    'Dopelniacz-animacja.html': 'Dopełniacz — animacja',
+    'Czas przeszly - offline.html': 'Czas przeszły'
+  };
+  const INITIAL = Object.keys(TITLES).map(name => ({name, path:name, type:'file'}));
+  const list = document.getElementById('materials');
+  const status = document.getElementById('status');
+  const search = document.getElementById('search');
+  const refresh = document.getElementById('refresh');
+  let files = INITIAL;
+  function valid(file) {
+    return file && file.type === 'file' && typeof file.name === 'string'
+      && typeof file.path === 'string' && file.path === file.name
+      && /\.html?$/i.test(file.name) && !/^index\.html?$/i.test(file.name)
+      && !/^404\.html?$/i.test(file.name) && !file.name.startsWith('.');
+  }
+  function label(file) {
+    return TITLES[file.name] || file.name.replace(/\.html?$/i,'').replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
+  }
+  function normal(text) { return text.toLocaleLowerCase('pl').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ł/g,'l'); }
+  function render() {
+    list.replaceChildren();
+    const query = normal(search.value.trim());
+    const matches = files.filter(valid).filter(file => normal(label(file)+' '+file.name).includes(query))
+      .sort((a,b) => label(a).localeCompare(label(b),'pl',{numeric:true}));
+    for (const file of matches) {
+      const link = document.createElement('a');
+      link.className = 'card';
+      link.href = BASE + encodeURIComponent(file.path);
+      link.textContent = label(file);
+      const small = document.createElement('span');
+      small.className = 'filename'; small.textContent = file.name;
+      link.append(small); list.append(link);
+    }
+    if (!matches.length) {
+      const message = document.createElement('p');
+      message.textContent = query ? 'Brak materiałów pasujących do wyszukiwania.' : 'Nie ma jeszcze plików HTML z ćwiczeniami.';
+      list.append(message);
+    }
+  }
+  try {
+    const saved = JSON.parse(localStorage.getItem(CACHE));
+    if (Array.isArray(saved)) files = saved.filter(valid);
+  } catch (_) {}
+  render();
+  async function load() {
+    refresh.disabled = true;
+    status.textContent = 'Pobieranie aktualnej listy materiałów…';
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(),15000);
+    try {
+      const response = await fetch(API,{headers:{Accept:'application/vnd.github+json'},cache:'no-store',signal:controller.signal});
+      if (!response.ok) throw new Error(String(response.status));
+      const data = await response.json();
+      if (!Array.isArray(data)) throw new Error('Nieprawidłowa odpowiedź');
+      files = data.filter(valid);
+      try { localStorage.setItem(CACHE,JSON.stringify(files)); } catch (_) {}
+      render();
+      status.textContent = 'Lista zaktualizowana. Liczba materiałów: '+files.length+'.';
+    } catch (_) {
+      status.textContent = 'Nie udało się pobrać aktualnej listy. Wyświetlam ostatnio zapamiętane lub początkowe materiały. Spróbuj ponownie za kilka minut.';
+    } finally { clearTimeout(timer); refresh.disabled = false; }
+  }
+  search.addEventListener('input',render);
+  refresh.addEventListener('click',load);
+  load();
+  </script>
 </body>
 </html>
