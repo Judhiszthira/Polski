@@ -1,0 +1,1256 @@
+<!doctype html><html lang="en" data-visualize-standalone><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Verb aspect — animation (English explanations)</title><style>:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --icon-size: 16px;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --corner-shape: round;
+  --radius: var(--border-radius-lg, 10px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: var(--visualize-paint-gutter, 0px);
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface], [data-visualize-standalone]) > body {
+  padding: 12px;
+}
+
+.cursor-interaction {
+  cursor: var(--cursor-interaction, pointer);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: var(--cursor-interaction, pointer);
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive > .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align="right"]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align="center"]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: var(--corner-shape);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+.widget {
+  min-width: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  box-shadow: 0 0 0 0.5px var(--border-strong, var(--border));
+  color: var(--foreground);
+  background: var(--background);
+}
+
+#widget > :not(.card, .widget, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The shared runtime owns data-tooltip; suppress AppBlock's pseudo-tooltip. */
+main [data-tooltip]::after {
+  content: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+hr {
+  width: 100%;
+  height: 1px;
+  margin-block: 6px;
+  border: 0;
+  background: var(--border);
+}
+
+.nav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress {
+  display: flex;
+  height: 8px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 8px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar:only-child {
+  border-radius: var(--radius-full);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.nav-link,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn,
+.nav-link {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: var(--cursor-interaction, pointer);
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover,
+.nav-link:not(:disabled):not([aria-disabled="true"]):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.nav-pills .nav-link {
+  min-width: 0;
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.nav-justified .nav-link {
+  flex: 1 1 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.nav-pills .nav-link.active {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+/* Shared preview chrome; product styles stay inside each variant. */
+.viz-dotted-background {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--foreground) 14%, transparent) 0.8px,
+    transparent 0.8px
+  );
+  background-position: center;
+  background-size: 16px 16px;
+}
+
+.viz-carousel {
+  position: relative;
+  min-width: 0;
+}
+
+.viz-carousel:has(> .viz-carousel-controls) {
+  min-height: calc(60px + var(--viz-carousel-picker-height, 0px));
+  padding-bottom: 60px;
+}
+
+.viz-carousel > [data-variant][hidden] {
+  display: none !important;
+}
+
+.viz-carousel > [data-variant] {
+  isolation: isolate;
+}
+
+.viz-carousel-controls {
+  --viz-carousel-hover: light-dark(
+    color-mix(in srgb, var(--foreground) 5.4%, transparent),
+    color-mix(in srgb, var(--foreground) 7.8%, transparent)
+  );
+  position: absolute;
+  z-index: 2;
+  bottom: 8px;
+  left: 50%;
+  display: flex;
+  width: max-content;
+  /* Leave room for the host's design-controls launcher at the trailing edge. */
+  max-width: calc(100% - 96px);
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans);
+  /* Match the settings dropdown chrome independently of the content font size. */
+  font-size: 13px;
+  font-weight: var(--font-weight-normal);
+  line-height: 18px;
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+/* Keep authored mockup button styles out of the shared carousel chrome. */
+.viz-carousel-controls button,
+.viz-carousel-picker > summary {
+  display: flex !important;
+  height: auto !important;
+  min-height: 30px;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px;
+  padding: 0 6px !important;
+  -webkit-app-region: no-drag;
+  border: 0 !important;
+  border-radius: 14px !important;
+  color: inherit !important;
+  background: transparent !important;
+  font: inherit !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.viz-carousel-controls > button,
+.viz-carousel-picker > summary {
+  position: relative;
+  isolation: isolate;
+}
+
+.viz-carousel-controls > button {
+  --icon-size: 16px;
+  width: 30px !important;
+  padding: 0 !important;
+}
+
+.viz-carousel-picker > summary {
+  padding-inline: 12px !important;
+}
+
+.viz-carousel-controls .viz-carousel-caret {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin: 0;
+  color: inherit;
+  transform: rotate(180deg);
+}
+
+.viz-carousel-controls > button > svg,
+.viz-carousel-controls .viz-carousel-caret,
+.viz-carousel-count {
+  opacity: 0.5;
+}
+
+.viz-carousel-controls > button::before,
+.viz-carousel-picker > summary::before {
+  position: absolute;
+  z-index: -1;
+  inset: 3px;
+  border-radius: 12px;
+  content: "";
+  pointer-events: none;
+}
+
+.viz-carousel-controls > button:hover::before,
+.viz-carousel-picker > summary:hover::before {
+  background: var(--viz-carousel-hover);
+}
+
+.viz-carousel-controls > button,
+.viz-carousel-controls [data-lucide],
+.viz-carousel-controls .lucide {
+  flex-shrink: 0;
+}
+
+.viz-carousel-picker {
+  min-width: 0;
+}
+
+.viz-carousel-picker > summary {
+  min-width: 0;
+  list-style: none;
+}
+
+.viz-carousel-picker > summary::-webkit-details-marker {
+  display: none;
+}
+
+.viz-carousel-count {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.viz-carousel-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.viz-carousel-options {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 4px);
+  left: 0;
+  display: flex;
+  max-height: 240px;
+  flex-direction: column;
+  gap: 2px;
+  overflow: auto;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--background);
+  box-shadow: 0 4px 12px light-dark(rgb(0 0 0 / 6%), rgb(0 0 0 / 25%));
+}
+
+.viz-carousel-options > button {
+  border-radius: max(0px, calc(var(--radius-lg) - 5px)) !important;
+  width: 100% !important;
+  min-height: 28px;
+  justify-content: flex-start !important;
+  padding: 4px 8px !important;
+  font-size: var(--font-size-small) !important;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.viz-carousel-options > [aria-current="true"],
+.viz-carousel-options > button:hover {
+  background: var(--viz-carousel-hover) !important;
+}
+
+.btn:disabled,
+.nav-link:disabled,
+.nav-link[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type="file"] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type="file"]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type="file"]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type="color"] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: var(--corner-shape);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed="true"],
+  [aria-selected="true"],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.viz-carousel-controls :is(button, summary):focus-visible {
+  outline: 2px solid var(--ring) !important;
+  outline-offset: 2px !important;
+}
+
+@media (pointer: coarse) {
+  .viz-carousel:has(> .viz-carousel-controls) {
+    min-height: calc(76px + var(--viz-carousel-picker-height, 0px));
+    padding-bottom: 76px;
+  }
+
+  .btn,
+  .nav-link,
+  .viz-carousel-controls button,
+  .viz-carousel-picker > summary,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Keep small-screen WebKit from zooming when a text field receives focus. */
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type="file"]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type="color"] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type="date"],
+    [type="datetime-local"],
+    [type="month"],
+    [type="time"],
+    [type="week"]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: "";
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+
+html>body{padding:0}
+body{padding:20px!important;background:var(--background)!important}#acc-lab{max-width:1280px;margin:auto;text-align:center;min-height:calc(100svh - 40px);display:flex;flex-direction:column;justify-content:center;color:var(--foreground)}h2{margin:0 0 16px}.controls{display:flex;gap:12px;align-items:end;justify-content:center;flex-wrap:wrap}.controls label{text-align:left;display:flex;flex-direction:column;gap:5px;font-size:14px}select{max-width:100%;width:380px}button,select{font:inherit}.acc-scene{flex:1;min-height:355px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:24px 6px}.label{color:var(--muted-foreground);font-size:15px}.prompt{font-size:clamp(20px,2.7vw,32px)}.sentence{font-size:clamp(30px,4.7vw,64px);line-height:1.4;font-weight:500;max-width:100%;overflow-wrap:anywhere}.note{max-width:950px;font-size:18px;min-height:56px;line-height:1.5}.old,.new,.same{display:inline-block;padding:0 3px;border-radius:3px}.old{color:var(--purple);background:color-mix(in srgb,var(--purple) 12%,transparent)}.new{color:var(--orange);background:color-mix(in srgb,var(--orange) 14%,transparent)}.same{color:var(--green);background:color-mix(in srgb,var(--green) 12%,transparent)}.morph{display:inline-grid;vertical-align:baseline}.morph>span{grid-area:1/1}.incoming{animation:ending-in 850ms ease both}.outgoing{animation:ending-out 450ms ease both}.arrive{animation:rise 450ms ease both}.legend{font-size:14px;display:flex;justify-content:center;gap:18px;margin:14px 0 0;flex-wrap:wrap}.rail{display:flex;gap:7px;align-items:center;height:12px;justify-content:center}.rail span{width:40px;height:4px;background:var(--border);border-radius:5px}.rail .done{background:var(--primary)}details{text-align:left;margin-top:14px;font-size:15px}summary{cursor:pointer;padding:7px}.small{font-size:13px;color:var(--muted-foreground)}.toolbar{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}.toolbar .speed{width:110px}.note b{font-weight:600}.hint{margin-top:10px}.summary-table td,.summary-table th{padding:10px;border-bottom:1px solid var(--border);text-align:left}.tablewrap{overflow:auto}.summary-table{border-collapse:collapse;width:100%}#status{min-width:135px}button:disabled{opacity:.4;cursor:default}button:focus-visible,select:focus-visible{outline:3px solid var(--primary);outline-offset:3px}@keyframes ending-in{0%,20%{transform:translateY(-.7em);opacity:0}100%{transform:none;opacity:1}}@keyframes ending-out{from{opacity:1}to{transform:translateY(.6em);opacity:0}}@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@media(max-width:650px){body{padding:12px!important}.controls label{width:100%}select{width:100%}.acc-scene{min-height:350px}.note{font-size:16px}.legend{gap:8px}#acc-lab{min-height:calc(100svh - 24px)}}@media(prefers-reduced-motion:reduce){.incoming,.arrive{animation:none}.outgoing{display:none}}</style></head><body><main id="acc-lab"><h2>Verb aspect</h2><div class="controls"><label>Section / separate panel<select class="form-select" id="section"></select></label><label>Example<select class="form-select" id="example"></select></label></div><div class="legend"><span><span class="old">original form</span></span><span><span class="new">change</span></span><span><span class="same">shared part</span></span></div><section class="acc-scene" aria-live="polite" aria-atomic="true"><div id="label" class="label"></div><div id="prompt" class="prompt"></div><div id="sentence" class="sentence"></div><div id="rail" class="rail" aria-hidden="true"></div><div id="note" class="note"></div></section><div class="toolbar"><button class="btn" id="back">← Back</button><button class="btn btn-primary" id="next">Next →</button><button class="btn" id="play">▶ Play</button><button class="btn btn-ghost" id="reset">Restart</button><button class="btn" id="another">Next example →</button><select class="form-select speed" id="speed" aria-label="Playback speed"><option value="4500">Slow</option><option value="3000" selected>Normal</option><option value="1800">Fast</option></select><button class="btn" id="full" aria-label="Full screen">⛶</button><span id="status" class="small"></span></div><div class="small hint">Space / →: next · ←: back · R: restart · F: full screen</div><details><summary>Reference: examples from this section</summary><p id="section-note"></p><div class="tablewrap"><table class="summary-table"><thead><tr><th>Forms</th><th>Aspect / function</th></tr></thead><tbody id="summary"></tbody></table></div></details><details><summary>About these materials and key distinctions</summary><p>Based on the supplied aspect charts and the Polski na wynos materials: “Iść – chodzić – pójść”, “Jechać – jeździć – pojechać”, “Lecieć – latać – polecieć” and “Podstawowe czasowniki wielokrotne”. The example sentences were written for this animation.</p><p>Frequentative forms are imperfective. “Iść” and “chodzić” do not form an aspectual pair. Perfective verbs have no present tense. A prefix may change both aspect and meaning.</p><p>The source error “siadać — siedzę” has been corrected to “siadać — siadam”. The pair “siedzieć — siadywać” illustrates habitual sitting. “Stać — stawać” is not presented as a straightforward pair: “stać” describes a state; “stawać” describes assuming a standing position.</p></details></main><script>
+const DATA={"sections": [{"k": "use", "t": "What aspect means", "n": "Imperfective: an activity in progress, repetition, or the fact that an action took place. Perfective: an action viewed as a bounded whole, its endpoint or its result."}, {"k": "pre", "t": "Formation: prefixes", "n": "Add a prefix to an imperfective verb. Learn the two verbs together: a prefix may also change the meaning."}, {"k": "suf", "t": "Formation: suffixes and stems", "n": "The suffix changes, sometimes along with sounds in the stem. The imperfective form is often longer: kupować ← kupić."}, {"k": "other", "t": "Formation: a different verb", "n": "Some aspectual pairs have markedly different stems. Learn both forms together."}, {"k": "time", "t": "Aspect and tense", "n": "Only imperfective verbs have a present tense. Imperfective future: będę + infinitive or an -ł form. Perfective future: a single verb form, e.g. napiszę."}, {"k": "walk", "t": "Motion: iść • chodzić • pójść", "n": "The first two verbs are imperfective: motion in one direction, and repeated or multidirectional motion. The third is perfective: a single event, often setting off."}, {"k": "drive", "t": "Motion: jechać • jeździć • pojechać", "n": "The first two verbs are imperfective: motion in one direction, and repeated or multidirectional motion. The third is perfective: a single event, often setting off."}, {"k": "fly", "t": "Motion: lecieć • latać • polecieć", "n": "The first two verbs are imperfective: motion in one direction, and repeated or multidirectional motion. The third is perfective: a single event, often setting off."}, {"k": "motionpre", "t": "Motion: prefixed forms", "n": "The prefix adds a directional meaning, e.g. wy- = out, przy- = arrival. Pairs: wychodzić–wyjść, wyjeżdżać–wyjechać, wylatywać–wylecieć."}, {"k": "freq", "t": "Frequentative verbs", "n": "Frequentative forms are IMPERFECTIVE. They emphasise habitual or repeated actions, often at irregular intervals. Ordinary imperfective verbs can also describe repetition."}, {"k": "limits", "t": "Important distinctions", "n": "Not every verb has a straightforward aspectual partner. Duration alone, or expressions such as “wczoraj”, “jutro” and “rano”, do not determine aspect."}], "data": [{"g": "use", "label": "czytać → przeczytać", "forms": ["czytać", "przeczytać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Wczoraj przez dwie godziny czytałem książkę.", "Wczoraj w dwie godziny przeczytałem książkę."], "note": "“Przez dwie godziny” describes duration (for two hours); “w dwie godziny” gives the time needed to finish reading (in two hours)."}, {"g": "use", "label": "pisać → napisać", "forms": ["pisać", "napisać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Pisałam list, ale go nie skończyłam.", "Napisałam list i mogę go wysłać."], "note": "The imperfective does not, by itself, tell us whether the action was completed."}, {"g": "use", "label": "dzwonić → zadzwonić", "forms": ["dzwonić", "zadzwonić"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Kiedy miał czas, dzwonił do mamy codziennie.", "Wczoraj o ósmej zadzwonił do mamy."], "note": "Repetition over an open-ended period → imperfective; a single event viewed as a whole → perfective."}, {"g": "use", "label": "sprzątać → posprzątać", "forms": ["sprzątać", "posprzątać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Maria sprzątała mieszkanie przez cały ranek.", "Maria posprzątała mieszkanie i odpoczywa."], "note": "The perfective does not necessarily describe a short action."}, {"g": "use", "label": "jeść → zjeść", "forms": ["jeść", "zjeść"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Kiedy jadłem obiad, zadzwonił telefon.", "Zjadłem obiad i wyszedłem."], "note": "Background and an action in progress → imperfective; successive bounded events → perfective."}, {"g": "use", "label": "płacić → zapłacić", "forms": ["płacić", "zapłacić"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Kto płacił za bilety?", "Kto zapłacił za bilety?"], "note": "The imperfective can ask whether an action took place or who performed it, even if the action was completed."}, {"g": "pre", "label": "pisać → napisać", "forms": ["pisać", "napisać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Pisałem wiadomość.", "Napisałem wiadomość."], "note": "Add the prefix na-."}, {"g": "pre", "label": "czytać → przeczytać", "forms": ["czytać", "przeczytać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Czytałam artykuł.", "Przeczytałam artykuł."], "note": "Add the prefix prze-."}, {"g": "pre", "label": "robić → zrobić", "forms": ["robić", "zrobić"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Robiliśmy zadanie.", "Zrobiliśmy zadanie."], "note": "Add the prefix z-."}, {"g": "pre", "label": "jeść → zjeść", "forms": ["jeść", "zjeść"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Jadłam kanapkę.", "Zjadłam kanapkę."], "note": "Add the prefix z-."}, {"g": "pre", "label": "budować → zbudować", "forms": ["budować", "zbudować"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Budowali dom.", "Zbudowali dom."], "note": "Add the prefix z-."}, {"g": "pre", "label": "kończyć → skończyć", "forms": ["kończyć", "skończyć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Kończyłem raport.", "Skończyłem raport."], "note": "Add the prefix s-."}, {"g": "pre", "label": "grać → zagrać", "forms": ["grać", "zagrać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Wieczorem graliśmy w szachy.", "Wieczorem zagraliśmy partię szachów."], "note": "Add the prefix za-."}, {"g": "pre", "label": "dzwonić → zadzwonić", "forms": ["dzwonić", "zadzwonić"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Dzwoniłam do lekarza.", "Zadzwoniłam do lekarza."], "note": "Add the prefix za-."}, {"g": "pre", "label": "prosić → poprosić", "forms": ["prosić", "poprosić"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Prosiłem o pomoc.", "Poprosiłem o pomoc."], "note": "Add the prefix po-."}, {"g": "pre", "label": "dziękować → podziękować", "forms": ["dziękować", "podziękować"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Dziękowała za prezent.", "Podziękowała za prezent."], "note": "Add the prefix po-."}, {"g": "pre", "label": "gotować → ugotować", "forms": ["gotować", "ugotować"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Gotowałem zupę.", "Ugotowałem zupę."], "note": "Add the prefix u-."}, {"g": "pre", "label": "myć → umyć", "forms": ["myć", "umyć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Myłam okna.", "Umyłam okna."], "note": "Add the prefix u-."}, {"g": "pre", "label": "pić → wypić", "forms": ["pić", "wypić"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Piłem kawę.", "Wypiłem kawę."], "note": "Add the prefix wy-."}, {"g": "pre", "label": "prać → wyprać", "forms": ["prać", "wyprać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Prałem koszulę.", "Wyprałem koszulę."], "note": "Add the prefix wy-."}, {"g": "pre", "label": "uczyć się → nauczyć się", "forms": ["uczyć się", "nauczyć się"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Uczyłem się tego wiersza.", "Nauczyłem się tego wiersza."], "note": "Add the prefix na-."}, {"g": "suf", "label": "kupować → kupić", "forms": ["kupować", "kupić"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Kupowałam chleb.", "Kupiłam chleb."], "note": "kup-ować → kup-ić"}, {"g": "suf", "label": "dawać → dać", "forms": ["dawać", "dać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Dawałem jej wskazówki.", "Dałem jej wskazówki."], "note": "dawać → dać"}, {"g": "suf", "label": "dostawać → dostać", "forms": ["dostawać", "dostać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Dostawałam dużo listów.", "Dostałam list."], "note": "-awać → -ać"}, {"g": "suf", "label": "zapraszać → zaprosić", "forms": ["zapraszać", "zaprosić"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Zapraszaliśmy sąsiadów.", "Zaprosiliśmy sąsiadów."], "note": "-ać → -ić; a → o"}, {"g": "suf", "label": "wracać → wrócić", "forms": ["wracać", "wrócić"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Wracałam do domu.", "Wróciłam do domu."], "note": "-ać → -ić; a → ó"}, {"g": "suf", "label": "otwierać → otworzyć", "forms": ["otwierać", "otworzyć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Otwierał okno.", "Otworzył okno."], "note": "otwierać → otworzyć"}, {"g": "suf", "label": "zamykać → zamknąć", "forms": ["zamykać", "zamknąć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Zamykałam drzwi.", "Zamknęłam drzwi."], "note": "-ykać → -knąć"}, {"g": "suf", "label": "odpowiadać → odpowiedzieć", "forms": ["odpowiadać", "odpowiedzieć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Odpowiadałem na pytanie.", "Odpowiedziałem na pytanie."], "note": "odpowiadać → odpowiedzieć"}, {"g": "suf", "label": "pomagać → pomóc", "forms": ["pomagać", "pomóc"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Pomagaliśmy sąsiadce.", "Pomogliśmy sąsiadce."], "note": "pomagać → pomóc; stem change"}, {"g": "suf", "label": "powtarzać → powtórzyć", "forms": ["powtarzać", "powtórzyć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Powtarzałam nowe słowa.", "Powtórzyłam nowe słowa."], "note": "-ać → -yć; a → ó"}, {"g": "suf", "label": "spotykać → spotkać", "forms": ["spotykać", "spotkać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Spotykałem go w parku.", "Spotkałem go w parku."], "note": "-ykać → -kać"}, {"g": "suf", "label": "kichać → kichnąć", "forms": ["kichać", "kichnąć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Kichał przez cały ranek.", "Nagle kichnął."], "note": "-ać → -nąć; a single act"}, {"g": "other", "label": "brać → wziąć", "forms": ["brać", "wziąć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Brałem parasol, kiedy wychodziłem.", "Wziąłem parasol i wyszedłem."], "note": "The verb stem changes; simply adding a prefix is not enough."}, {"g": "other", "label": "mówić → powiedzieć", "forms": ["mówić", "powiedzieć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Mówiła mi o tym.", "Powiedziała mi o tym."], "note": "The verb stem changes; simply adding a prefix is not enough."}, {"g": "other", "label": "oglądać → obejrzeć", "forms": ["oglądać", "obejrzeć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Oglądaliśmy film.", "Obejrzeliśmy film."], "note": "The verb stem changes; simply adding a prefix is not enough."}, {"g": "other", "label": "widzieć → zobaczyć", "forms": ["widzieć", "zobaczyć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Widziałem góry z okna.", "Nagle zobaczyłem góry."], "note": "The verb stem changes; simply adding a prefix is not enough."}, {"g": "other", "label": "kłaść → położyć", "forms": ["kłaść", "położyć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Kładłem książkę na stole.", "Położyłem książkę na stole."], "note": "The verb stem changes; simply adding a prefix is not enough."}, {"g": "other", "label": "znajdować → znaleźć", "forms": ["znajdować", "znaleźć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Często znajdowała drobne monety.", "Znalazła monetę."], "note": "The verb stem changes; simply adding a prefix is not enough."}, {"g": "time", "label": "piszę → napiszę", "forms": ["piszę", "napiszę"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Teraz piszę list.", "Jutro napiszę list."], "note": "“Napiszę” refers to the future, although its conjugation resembles that of “piszę”."}, {"g": "time", "label": "będę pisać → napiszę", "forms": ["będę pisać", "napiszę"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Jutro będę pisać list.", "Jutro napiszę list."], "note": "Imperfective future = będę pisać / będę pisał / będę pisała."}, {"g": "time", "label": "pisałem → napisałem", "forms": ["pisałem", "napisałem"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Wczoraj pisałem list.", "Wczoraj napisałem list."], "note": "Both aspects have past-tense forms."}, {"g": "time", "label": "będę czytać → przeczytam", "forms": ["będę czytać", "przeczytam"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Wieczorem będę czytać książkę.", "Wieczorem przeczytam ten rozdział."], "note": "The expression “wieczorem” does not, by itself, determine aspect."}, {"g": "walk", "label": "iść • chodzić • pójść", "forms": ["iść", "chodzić", "pójść"], "tags": ["Imperfective · one direction", "Imperfective · repeated / multidirectional motion", "Perfective · a single event"], "sentences": ["Teraz idę do szkoły.", "Codziennie chodzę do szkoły.", "Jutro pójdę do szkoły."], "note": "“Chodzić”, “jeździć” and “latać” can also describe motion in different directions, not just regular journeys."}, {"g": "walk", "label": "Past: szedłem • chodziłem • poszedłem", "forms": ["szedłem", "chodziłem", "poszedłem"], "tags": ["Imperfective · action in progress", "Imperfective · repetition", "Perfective · event"], "sentences": ["Kiedy szedłem do domu, padał deszcz.", "W zeszłym roku chodziłem do pracy pieszo.", "Wczoraj poszedłem do teatru."], "note": "In the past tense, we also distinguish an action in progress, repetition and a single event."}, {"g": "walk", "label": "Future: będę iść • będę chodzić • pójdę", "forms": ["będę iść", "będę chodzić", "pójdę"], "tags": ["Imperfective · action in progress", "Imperfective · repetition", "Perfective · event"], "sentences": ["Jutro o tej porze będę iść do pracy.", "Od poniedziałku będę chodzić na basen.", "Jutro pójdę na basen."], "note": "The imperfective future also has forms such as: będę szedł/szła, jechał/jechała, leciał/leciała."}, {"g": "drive", "label": "jechać • jeździć • pojechać", "forms": ["jechać", "jeździć", "pojechać"], "tags": ["Imperfective · one direction", "Imperfective · repeated / multidirectional motion", "Perfective · a single event"], "sentences": ["Teraz jadę do pracy autobusem.", "Codziennie jeżdżę do pracy autobusem.", "Jutro pojadę do pracy autobusem."], "note": "“Chodzić”, “jeździć” and “latać” can also describe motion in different directions, not just regular journeys."}, {"g": "drive", "label": "Past: jechałem • jeździłem • pojechałem", "forms": ["jechałem", "jeździłem", "pojechałem"], "tags": ["Imperfective · action in progress", "Imperfective · repetition", "Perfective · event"], "sentences": ["Kiedy jechałem do domu, padał deszcz.", "Dawniej jeździłem do pracy pociągiem.", "Wczoraj pojechałem do Krakowa."], "note": "In the past tense, we also distinguish an action in progress, repetition and a single event."}, {"g": "drive", "label": "Future: będę jechać • będę jeździć • pojadę", "forms": ["będę jechać", "będę jeździć", "pojadę"], "tags": ["Imperfective · action in progress", "Imperfective · repetition", "Perfective · event"], "sentences": ["Jutro o ósmej będę jechać do pracy.", "Od poniedziałku będę jeździć rowerem.", "Jutro pojadę rowerem."], "note": "The imperfective future also has forms such as: będę szedł/szła, jechał/jechała, leciał/leciała."}, {"g": "fly", "label": "lecieć • latać • polecieć", "forms": ["lecieć", "latać", "polecieć"], "tags": ["Imperfective · one direction", "Imperfective · repeated / multidirectional motion", "Perfective · a single event"], "sentences": ["Właśnie lecę do Londynu.", "Często latam do Londynu.", "Jutro polecę do Londynu."], "note": "“Chodzić”, “jeździć” and “latać” can also describe motion in different directions, not just regular journeys."}, {"g": "fly", "label": "Past: leciałem • latałem • poleciałem", "forms": ["leciałem", "latałem", "poleciałem"], "tags": ["Imperfective · action in progress", "Imperfective · repetition", "Perfective · event"], "sentences": ["Kiedy leciałem do Rzymu, czytałem książkę.", "Dawniej często latałem do Rzymu.", "Wczoraj poleciałem do Rzymu."], "note": "In the past tense, we also distinguish an action in progress, repetition and a single event."}, {"g": "fly", "label": "Future: będę lecieć • będę latać • polecę", "forms": ["będę lecieć", "będę latać", "polecę"], "tags": ["Imperfective · action in progress", "Imperfective · repetition", "Perfective · event"], "sentences": ["Jutro o tej porze będę lecieć do Rzymu.", "Od stycznia będę latać do Rzymu co miesiąc.", "Jutro polecę do Rzymu."], "note": "The imperfective future also has forms such as: będę szedł/szła, jechał/jechała, leciał/leciała."}, {"g": "motionpre", "label": "wychodzić → wyjść", "forms": ["wychodzić", "wyjść"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Właśnie wychodzę z domu.", "Za chwilę wyjdę z domu."], "note": "Adding a prefix also changes the meaning. “Wychodzić” is imperfective; “wyjść” is perfective."}, {"g": "motionpre", "label": "przychodzić → przyjść", "forms": ["przychodzić", "przyjść"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Codziennie przychodzę o ósmej.", "Jutro przyjdę o ósmej."], "note": "Adding a prefix also changes the meaning. “Wychodzić” is imperfective; “wyjść” is perfective."}, {"g": "motionpre", "label": "wchodzić → wejść", "forms": ["wchodzić", "wejść"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Wchodzę po schodach.", "Zaraz wejdę na górę."], "note": "Adding a prefix also changes the meaning. “Wychodzić” is imperfective; “wyjść” is perfective."}, {"g": "motionpre", "label": "wyjeżdżać → wyjechać", "forms": ["wyjeżdżać", "wyjechać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Co roku wyjeżdżam nad morze.", "Jutro wyjadę nad morze."], "note": "Adding a prefix also changes the meaning. “Wychodzić” is imperfective; “wyjść” is perfective."}, {"g": "motionpre", "label": "przyjeżdżać → przyjechać", "forms": ["przyjeżdżać", "przyjechać"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Często przyjeżdżam do Warszawy.", "W piątek przyjadę do Warszawy."], "note": "Adding a prefix also changes the meaning. “Wychodzić” is imperfective; “wyjść” is perfective."}, {"g": "motionpre", "label": "wylatywać → wylecieć", "forms": ["wylatywać", "wylecieć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Samolot wylatuje codziennie o szóstej.", "Jutro samolot wyleci o szóstej."], "note": "Adding a prefix also changes the meaning. “Wychodzić” is imperfective; “wyjść” is perfective."}, {"g": "motionpre", "label": "przylatywać → przylecieć", "forms": ["przylatywać", "przylecieć"], "tags": ["Imperfective aspect", "Perfective aspect"], "sentences": ["Ptaki przylatują tu każdej wiosny.", "Wiosną ptaki znów tu przylecą."], "note": "Adding a prefix also changes the meaning. “Wychodzić” is imperfective; “wyjść” is perfective."}, {"g": "freq", "label": "być → bywać", "forms": ["być", "bywać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Dziś jestem w tej kawiarni.", "Czasem bywam w tej kawiarni."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "jeść → jadać", "forms": ["jeść", "jadać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Teraz jem śniadanie.", "Zwykle jadam śniadanie o ósmej."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "pić → pijać", "forms": ["pić", "pijać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Teraz piję herbatę.", "Wieczorami pijam herbatę."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "czytać → czytywać", "forms": ["czytać", "czytywać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Czytam ten artykuł.", "Od czasu do czasu czytuję takie artykuły."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "pisać → pisywać", "forms": ["pisać", "pisywać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Piszę wiersz.", "Czasem pisuję wiersze."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "grać → grywać", "forms": ["grać", "grywać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Teraz gram w szachy.", "W weekendy grywam w szachy."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "mieć → miewać", "forms": ["mieć", "miewać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Dzisiaj mam ból głowy.", "Czasem miewam bóle głowy."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "mówić → mawiać", "forms": ["mówić", "mawiać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Mama mówi, że warto czytać.", "Mama mawia, że warto czytać."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "widzieć → widywać", "forms": ["widzieć", "widywać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Widzę sąsiada przed domem.", "Często widuję sąsiada przed domem."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "spać → sypiać", "forms": ["spać", "sypiać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Teraz śpię w hotelu.", "W podróży sypiam w hotelach."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "siedzieć → siadywać", "forms": ["siedzieć", "siadywać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Siedzę przy oknie.", "Wieczorami siadywałem przy oknie."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "freq", "label": "chodzić → chadzać", "forms": ["chodzić", "chadzać"], "tags": ["Imperfective aspect", "Imperfective aspect · frequentative"], "sentences": ["Chodzę na spacery.", "Dawniej chadzałem na długie spacery."], "note": "This is not a change to the perfective aspect. Both forms are imperfective; the frequentative form emphasises a habit."}, {"g": "limits", "label": "być • mieć • mieszkać", "forms": ["być • mieć • mieszkać", "jestem • mam • mieszkam"], "tags": ["Imperfective verbs", "Present tense"], "sentences": ["Od lat mieszkam w Warszawie.", "Jutro będę w domu."], "note": "These verbs have no straightforward perfective equivalents. “Zamieszkać” means to begin living somewhere."}, {"g": "limits", "label": "Repetition in the perfective too", "forms": ["pisać", "napisać"], "tags": ["Imperfective · habit", "Perfective · a bounded series"], "sentences": ["Codziennie pisałem listy.", "Wczoraj napisałem trzy listy."], "note": "The perfective can cover several actions when they are viewed as a bounded whole."}]};
+const $=id=>document.getElementById(id);let current=0,step=0,timer=null;
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function difference(a,b,animate){let p=0;while(p<a.length&&p<b.length&&a[p]===b[p])p++;let z=0;while(z<a.length-p&&z<b.length-p&&a[a.length-1-z]===b[b.length-1-z])z++;const pre=b.slice(0,p),suf=z?b.slice(-z):'',old=a.slice(p,a.length-z),fresh=b.slice(p,b.length-z);return (pre?'<span class="same">'+esc(pre)+'</span>':'')+'<span class="morph">'+(animate&&old?'<span class="old outgoing" aria-hidden="true">'+esc(old)+'</span>':'')+'<span class="new '+(animate?'incoming':'')+'">'+esc(fresh)+'</span></span>'+(suf?'<span class="same">'+esc(suf)+'</span>':'');}
+function indices(){return DATA.data.map((e,i)=>e.g===$('section').value?i:-1).filter(i=>i>=0)}
+function stop(){clearInterval(timer);timer=null;$('play').textContent='▶ Play'}
+function render(animate=true){const e=DATA.data[current],s=DATA.sections.find(s=>s.k===e.g),n=e.forms.length,isSentence=step>=n,j=step%n;const group=indices();$('label').textContent=s.t+' · example '+(group.indexOf(current)+1)+' / '+group.length;$('prompt').textContent=isSentence?'In a sentence · '+e.tags[j].toLowerCase():e.tags[j];$('sentence').innerHTML=isSentence?esc(e.sentences[j]):j?difference(e.forms[j-1],e.forms[j],animate):'<span class="old">'+esc(e.forms[0])+'</span>';$('sentence').classList.remove('arrive');if(isSentence&&animate){void $('sentence').offsetWidth;$('sentence').classList.add('arrive')}$('note').textContent=step===0?s.n:e.note||s.n;$('rail').innerHTML=Array.from({length:n*2},(_,i)=>'<span class="'+(i<=step?'done':'')+'"></span>').join('');$('back').disabled=step===0;$('next').disabled=step===n*2-1;$('status').textContent='Step '+(step+1)+' / '+(n*2);$('example').value=String(current)}
+function selectSection(){stop();const a=indices();$('example').innerHTML=a.map(i=>'<option value="'+i+'">'+esc(DATA.data[i].label)+'</option>').join('');current=a[0];step=0;const s=DATA.sections.find(s=>s.k===$('section').value);$('section-note').textContent=s.n;$('summary').innerHTML=a.map(i=>{const e=DATA.data[i];return '<tr><td>'+e.forms.map(esc).join(' → ')+'</td><td>'+e.tags.map(esc).join('<br>')+'</td></tr>'}).join('');render(false)}
+function next(){if(step<DATA.data[current].forms.length*2-1){step++;render()}else stop()}
+$('section').innerHTML=DATA.sections.map(s=>'<option value="'+s.k+'">'+esc(s.t)+'</option>').join('');$('section').onchange=selectSection;$('example').onchange=()=>{stop();current=Number($('example').value);step=0;render(false)};$('next').onclick=()=>{stop();next()};$('back').onclick=()=>{stop();step=Math.max(0,step-1);render(false)};$('reset').onclick=()=>{stop();step=0;render(false)};$('another').onclick=()=>{stop();const a=indices();current=a[(a.indexOf(current)+1)%a.length];step=0;render(false)};
+function play(){if(timer){stop();return}if(step===DATA.data[current].forms.length*2-1){step=0;render(false)}$('play').textContent='Ⅱ Pause';timer=setInterval(()=>{next();if(step===DATA.data[current].forms.length*2-1)stop()},Number($('speed').value))}$('play').onclick=play;$('speed').onchange=()=>{if(timer){stop();play()}};
+async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){$('status').textContent='Full screen: use F11'}}$('full').onclick=fullscreen;
+document.addEventListener('keydown',e=>{if(e.target.matches('select,input,textarea,button')||e.ctrlKey||e.altKey||e.metaKey)return;if(e.key===' '||e.key==='ArrowRight'){e.preventDefault();$('next').click()}if(e.key==='ArrowLeft'){e.preventDefault();$('back').click()}if(e.key.toLowerCase()==='r')$('reset').click();if(e.key.toLowerCase()==='f')fullscreen()});selectSection();
+</script></body></html>
