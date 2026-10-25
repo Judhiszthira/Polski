@@ -309,6 +309,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // preserve ordering (React before ReactDOM before Babel before text/babel).
     const doc = new DOMParser().parseFromString(template, 'text/html');
     document.documentElement.replaceWith(doc.documentElement);
+    document.title = "Czas przeszły";
 
     // Resolve page-frame markers: mint this document's own blob for each
     // framed page — from local text when this is the root, otherwise by
