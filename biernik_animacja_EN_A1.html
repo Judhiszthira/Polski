@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biernik – animacja</title>
+<style>
+:root{
+  --navy:#1F2A44; --bg:#FAF6EE; --ink:#222; --grey:#6b6b6b;
+  --old:#6B4FA0; --old-bg:#EEE8F7;   /* mianownik ending */
+  --new:#C0392B; --new-bg:#F8E3E6;   /* biernik ending */
+  --same:#3C7D3A; --same-bg:#E6F2E4; /* no change */
+  --teal:#1B7F7A; --teal-bg:#E3F3F2; --amber:#B7791F; --amber-bg:#FBF1DE;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"DejaVu Sans",sans-serif}
+header{background:var(--navy);color:#fff;padding:18px 28px;display:flex;align-items:baseline;gap:24px;flex-wrap:wrap}
+header h1{margin:0;font-size:34px}
+header .sub{font-size:22px;opacity:.85}
+main{max-width:1280px;margin:0 auto;padding:18px 16px 28px;text-align:center}
+.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin:8px 0}
+select,button{font:inherit;font-size:19px;padding:8px 14px;border-radius:8px;border:1px solid #c9c2b4;background:#fff;color:var(--ink);cursor:pointer}
+button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+button:disabled{opacity:.4;cursor:default}
+.legend{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;font-size:18px;margin:10px 0 4px}
+.e{display:inline-block;padding:0 4px;border-radius:4px;font-weight:700}
+.e.old{color:var(--old);background:var(--old-bg)}
+.e.new{color:var(--new);background:var(--new-bg)}
+.e.same{color:var(--same);background:var(--same-bg)}
+.scene{min-height:400px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;
+  margin:14px 0;padding:24px 10px;background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.case{font-size:24px;font-weight:700;letter-spacing:.5px;padding:6px 18px;border-radius:999px}
+.case.m{color:var(--old);background:var(--old-bg)}
+.case.b{color:var(--new);background:var(--new-bg)}
+.case.q{color:var(--amber);background:var(--amber-bg)}
+.prompt{font-size:clamp(26px,3.6vw,42px);color:var(--amber);font-weight:700;min-height:1.3em}
+.sentence{font-size:clamp(34px,5.6vw,72px);line-height:1.35;font-weight:600}
+.sentence .e{font-size:1.15em}
+.word{white-space:nowrap;display:inline-block}
+.stem-change{text-decoration:underline dotted;text-underline-offset:7px}
+.rule{font-size:22px;max-width:960px;min-height:64px;line-height:1.5}
+.chg{display:inline-block;margin:0 16px 4px 0}
+.morph{display:inline-grid;vertical-align:baseline}
+.morph>span{grid-area:1/1}
+.out{animation:out .55s ease-in both}
+.in{animation:in .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes out{to{transform:translateY(.8em) rotate(10deg);opacity:0}}
+@keyframes in{0%,30%{transform:translateY(-.9em) rotate(-8deg);opacity:0}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.in{animation:none}.out{display:none}}
+.count{font-size:17px;color:var(--grey)}
+details{text-align:left;margin-top:18px;font-size:20px}
+summary{cursor:pointer;padding:8px 0;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:21px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid #e4ddd0}
+th{background:var(--navy);color:#fff}
+tbody tr:nth-child(odd){background:var(--teal-bg)}
+.hint{font-size:16px;color:var(--grey);margin-top:6px}
+@media (max-width:600px){.word{white-space:normal}.scene{min-height:330px}}
+</style>
+</head>
+<body>
+<header><h1>Mianownik → Biernik</h1><span class="sub">Kto? Co? → Kogo? Co?</span></header>
+<main>
+  <div class="controls">
+    <select id="group" aria-label="Group"></select>
+    <select id="example" aria-label="Example"></select>
+  </div>
+  <div class="legend">
+    <span><span class="e old">-a</span> Mianownik ending</span>
+    <span><span class="e new">-ę</span> Biernik ending</span>
+    <span><span class="e same">-o</span> no change</span>
+  </div>
+  <div class="scene" aria-live="polite">
+    <div id="case" class="case m"></div>
+    <div id="prompt" class="prompt"></div>
+    <div id="sentence" class="sentence"></div>
+    <div id="rule" class="rule"></div>
+  </div>
+  <div class="controls">
+    <button id="back">← Back</button>
+    <button id="next" class="primary">Next →</button>
+    <button id="play">▶ Play</button>
+    <button id="restart">Restart</button>
+    <button id="another">Next example →</button>
+    <span id="count" class="count"></span>
+  </div>
+  <div class="hint">Keyboard: → next · ← back · space play / pause</div>
+  <details>
+    <summary>All groups – overview</summary>
+    <table><thead><tr><th>Group</th><th>Mianownik · Kto? Co?</th><th>Biernik · Kogo? Co?</th></tr></thead>
+    <tbody id="table"></tbody></table>
+  </details>
+</main>
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const groups = [
+  ['f',  'She-words (feminine)'],
+  ['mp', 'He-words: people'],
+  ['ma', 'He-words: animals'],
+  ['mi', 'He-words: things'],
+  ['n',  'It-words (neuter)'],
+];
+// n = noun [stem, ending] in Mianownik, b = noun in Biernik; a / ab = adjective
+// v = verb, q = question, aq = question about the adjective, post = adjective after noun
+const R = {
+  f:  'Noun: -a → -ę.  Adjective: -a → -ą.',
+  mp: 'He-word, person: noun + -a.  Adjective: -y / -i → -ego.',
+  ma: 'He-word, animal: noun + -a.  Adjective: -y / -i → -ego.',
+  mi: 'He-word, thing: no change.',
+  n:  'It-word: no change.',
+};
+const data = [
+ {g:'f', n:['książk','a'], b:['książk','ę'], a:['ciekaw','a'], ab:['ciekaw','ą'], v:'Czytam', q:'Co?', aq:'Jaką książkę?'},
+ {g:'f', n:['zup','a'], b:['zup','ę'], a:['pomidorow','a'], ab:['pomidorow','ą'], v:'Jem', q:'Co?', aq:'Jaką zupę?', post:true},
+ {g:'f', n:['kaw','a'], b:['kaw','ę'], a:['czarn','a'], ab:['czarn','ą'], v:'Piję', q:'Co?', aq:'Jaką kawę?'},
+ {g:'f', n:['gazet','a'], b:['gazet','ę'], a:['polsk','a'], ab:['polsk','ą'], v:'Czytam', q:'Co?', aq:'Jaką gazetę?'},
+ {g:'f', n:['kobiet','a'], b:['kobiet','ę'], a:['mił','a'], ab:['mił','ą'], v:'Znam', q:'Kogo?', aq:'Jaką kobietę?', rule:'Kogo? – for women too.  Noun: -a → -ę.  Adjective: -a → -ą.'},
+ {g:'f', n:['koleżank','a'], b:['koleżank','ę'], a:['now','a'], ab:['now','ą'], v:'Spotykam', q:'Kogo?', aq:'Jaką koleżankę?'},
+ {g:'f', n:['siostr','a'], b:['siostr','ę'], a:['młodsz','a'], ab:['młodsz','ą'], v:'Mam', q:'Kogo?', aq:'Jaką siostrę?'},
+ {g:'f', n:['pan','i'], b:['pan','ią'], a:['mił','a'], ab:['mił','ą'], v:'Znam', q:'Kogo?', aq:'Jaką panią?', rule:'Special: pani → panią.  Adjective: -a → -ą.'},
+
+ {g:'mp', n:['aktor',''], b:['aktor','a'], a:['polsk','i'], ab:['polsk','iego'], v:'Lubię', q:'Kogo?', aq:'Jakiego aktora?'},
+ {g:'mp', n:['lekarz',''], b:['lekarz','a'], a:['dobr','y'], ab:['dobr','ego'], v:'Znam', q:'Kogo?', aq:'Jakiego lekarza?'},
+ {g:'mp', n:['brat',''], b:['brat','a'], a:['starsz','y'], ab:['starsz','ego'], v:'Mam', q:'Kogo?', aq:'Jakiego brata?'},
+ {g:'mp', n:['syn',''], b:['syn','a'], a:['mał','y'], ab:['mał','ego'], v:'Mam', q:'Kogo?', aq:'Jakiego syna?'},
+ {g:'mp', n:['nauczyciel',''], b:['nauczyciel','a'], a:['now','y'], ab:['now','ego'], v:'Lubię', q:'Kogo?', aq:'Jakiego nauczyciela?'},
+ {g:'mp', n:['koleg','a'], b:['koleg','ę'], a:['now','y'], ab:['now','ego'], v:'Spotykam', q:'Kogo?', aq:'Jakiego kolegę?', rule:'kolega is a he-word ending in -a.  Noun: -a → -ę.  Adjective: -y → -ego.'},
+
+ {g:'ma', n:['kot',''], b:['kot','a'], a:['mał','y'], ab:['mał','ego'], v:'Mam', q:'Kogo?', aq:'Jakiego kota?'},
+ {g:'ma', n:['pies',''], b:['ps','a'], a:['duż','y'], ab:['duż','ego'], v:'Mam', q:'Kogo?', aq:'Jakiego psa?', rule:'pies → psa: “ie” disappears.  Adjective: -y → -ego.'},
+
+ {g:'mi', n:['dom',''], b:['dom',''], a:['duż','y'], ab:['duż','y'], v:'Mam', q:'Co?', aq:'Jaki dom?'},
+ {g:'mi', n:['samochód',''], b:['samochód',''], a:['now','y'], ab:['now','y'], v:'Mam', q:'Co?', aq:'Jaki samochód?'},
+ {g:'mi', n:['film',''], b:['film',''], a:['ciekaw','y'], ab:['ciekaw','y'], v:'Oglądam', q:'Co?', aq:'Jaki film?'},
+ {g:'mi', n:['obiad',''], b:['obiad',''], a:['smaczn','y'], ab:['smaczn','y'], v:'Gotuję', q:'Co?', aq:'Jaki obiad?'},
+ {g:'mi', n:['telefon',''], b:['telefon',''], a:['now','y'], ab:['now','y'], v:'Mam', q:'Co?', aq:'Jaki telefon?'},
+
+ {g:'n', n:['dzieck','o'], b:['dzieck','o'], a:['mał','e'], ab:['mał','e'], v:'Mam', q:'Kogo?', aq:'Jakie dziecko?', rule:'It-word: no change – even for a person (dziecko).'},
+ {g:'n', n:['mieszkani','e'], b:['mieszkani','e'], a:['ładn','e'], ab:['ładn','e'], v:'Mam', q:'Co?', aq:'Jakie mieszkanie?'},
+ {g:'n', n:['śniadani','e'], b:['śniadani','e'], a:['dobr','e'], ab:['dobr','e'], v:'Jem', q:'Co?', aq:'Jakie śniadanie?'},
+ {g:'n', n:['mlek','o'], b:['mlek','o'], a:['zimn','e'], ab:['zimn','e'], v:'Piję', q:'Co?', aq:'Jakie mleko?'},
+ {g:'n', n:['zdjęci','e'], b:['zdjęci','e'], a:['ładn','e'], ab:['ładn','e'], v:'Robię', q:'Co?', aq:'Jakie zdjęcie?'},
+];
+data.forEach(d => { d.rule = d.rule || R[d.g]; });
+
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const eq = (x,y) => x.join('') === y.join('');
+function word(p, other, target){
+  const kind = eq(p,other) ? 'same' : target ? 'new' : 'old';
+  const stem = p[0] !== other[0] ? `<span class="stem-change">${esc(p[0])}</span>` : esc(p[0]);
+  return `<span class="word">${stem}${p[1] ? `<span class="e ${kind}">${esc(p[1])}</span>` : ''}</span>`;
+}
+function morph(a, b){
+  if (eq(a,b)) return word(b,a,true);
+  const part = (o,n,end) => o === n ? esc(n) :
+    `<span class="morph"><span class="out ${end?'e old':'stem-change'}" aria-hidden="true">${esc(o)}</span>` +
+    `<span class="in ${end?'e new':'stem-change'}">${esc(n)}</span></span>`;
+  return `<span class="word">${part(a[0],b[0],false)}${part(a[1],b[1],true)}</span>`;
+}
+const order = (adj, noun, post) => post ? noun + ' ' + adj : adj + ' ' + noun;
+function chg(a, b, label){
+  const s = eq(a,b), fmt = x => x[1] ? '-' + esc(x[1]) : '—';
+  return `<span class="chg">${label}: <span class="e ${s?'same':'old'}">${fmt(a)}</span> → <span class="e ${s?'same':'new'}">${fmt(b)}</span></span>`;
+}
+
+let idx = 0, step = 0, timer = null, settle = null;
+const route = () => groups.flatMap(([g]) => data.map((d,i) => d.g === g ? i : -1).filter(i => i >= 0));
+
+function render(animate){
+  const d = data[idx];
+  clearTimeout(settle);
+  const c = $('case');
+  if (step === 0){ c.className = 'case m'; c.textContent = 'MIANOWNIK · Kto? Co?'; }
+  else if (step === 1 || step === 3){ c.className = 'case q'; c.textContent = 'Question first'; }
+  else { c.className = 'case b'; c.textContent = 'BIERNIK · Kogo? Co?'; }
+
+  $('prompt').textContent = step === 1 ? `${d.v} … ${d.q}` : step === 3 ? d.aq : '';
+
+  const nounN = word(d.n, d.b, false), adjN = word(d.a, d.ab, false);
+  const nounB = word(d.b, d.n, true),  adjB = word(d.ab, d.a, true);
+  let s;
+  if (step === 0) s = `To jest ${order(adjN, nounN, d.post)}.`;
+  else if (step === 1) s = `${d.v} …`;
+  else if (step === 2) s = `${d.v} ${animate ? morph(d.n, d.b) : nounB}.`;
+  else if (step === 3) s = `${d.v} ${order('…', nounB, d.post)}.`;
+  else s = `${d.v} ${order(animate ? morph(d.a, d.ab) : adjB, nounB, d.post)}.`;
+  $('sentence').innerHTML = s;
+
+  $('rule').innerHTML = step === 2 ? chg(d.n, d.b, 'Noun')
+    : step === 4 ? chg(d.n, d.b, 'Noun') + chg(d.a, d.ab, 'Adjective') + `<div>${esc(d.rule)}</div>` : '';
+
+  if (animate && (step === 2 || step === 4)){
+    const i0 = idx, s0 = step;
+    settle = setTimeout(() => { if (idx === i0 && step === s0) render(false); }, 1100);
+  }
+  const r = route(), last = r[r.length-1] === idx && step === 4;
+  $('back').disabled = step === 0;
+  $('next').disabled = last;
+  $('count').textContent = `Step ${step+1} of 5 · example ${r.indexOf(idx)+1} of ${data.length}`;
+}
+function stop(){ clearTimeout(timer); timer = null; $('play').textContent = '▶ Play'; }
+function setExample(i){
+  idx = i; $('group').value = data[i].g; fillExamples(); $('example').value = String(i); step = 0; render(false);
+}
+function next(){
+  if (step < 4){ step++; render(true); return; }
+  const r = route(), p = r.indexOf(idx);
+  if (p < r.length - 1) setExample(r[p+1]);
+}
+function back(){ if (step > 0){ step--; render(false); } }
+function fillExamples(){
+  const g = $('group').value;
+  $('example').innerHTML = data.map((d,i) => d.g === g
+    ? `<option value="${i}">${d.n.join('')} · ${d.v.toLowerCase()}</option>` : '').join('');
+}
+function tick(){ if (step >= 4){ stop(); return; } step++; render(true); timer = setTimeout(tick, 3000); }
+function togglePlay(){
+  if (timer){ stop(); return; }
+  if (step === 4){ step = 0; render(false); }
+  $('play').textContent = 'Ⅱ Pause'; timer = setTimeout(tick, 1500);
+}
+
+$('group').innerHTML = groups.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+$('group').addEventListener('change', () => { stop(); fillExamples(); setExample(Number($('example').value)); });
+$('example').addEventListener('change', () => { stop(); setExample(Number($('example').value)); });
+$('next').addEventListener('click', () => { stop(); next(); });
+$('back').addEventListener('click', () => { stop(); back(); });
+$('restart').addEventListener('click', () => { stop(); step = 0; render(false); });
+$('play').addEventListener('click', togglePlay);
+$('another').addEventListener('click', () => {
+  stop();
+  const list = data.map((d,i) => d.g === $('group').value ? i : -1).filter(i => i >= 0);
+  setExample(list[(list.indexOf(idx) + 1) % list.length]);
+});
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'SELECT') return;
+  if (e.key === 'ArrowRight'){ e.preventDefault(); stop(); next(); }
+  else if (e.key === 'ArrowLeft'){ e.preventDefault(); stop(); back(); }
+  else if (e.key === ' '){ e.preventDefault(); togglePlay(); }
+});
+
+const rep = [0, 7, 8, 13, 14, 15, 16, 21];
+$('table').innerHTML = rep.map(i => {
+  const d = data[i], gl = groups.find(x => x[0] === d.g)[1];
+  return `<tr><td>${gl}</td><td>${order(word(d.a,d.ab,false), word(d.n,d.b,false), d.post)}</td>` +
+         `<td>${d.v} ${order(word(d.ab,d.a,true), word(d.b,d.n,true), d.post)}</td></tr>`;
+}).join('');
+
+setExample(0);
+})();
+</script>
+</body>
+</html>
