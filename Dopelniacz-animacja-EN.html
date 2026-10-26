@@ -1679,12 +1679,16 @@ html[data-visualize-standalone] #acc-lab .acc-scene {flex:1;}
    }
    return state;
  }
+
+ function navigationOrder(){return sections.flatMap(([section])=&gt;{const selected=el(&#x27;group&#x27;).value;const entries=data.map((d,i)=&gt;d.section===section?i:-1).filter(i=&gt;i&gt;=0);return selected===&#x27;all&#x27;||!entries.some(i=&gt;data[i].g===selected)?entries:entries.filter(i=&gt;data[i].g===selected);});}
+ function atEnd(){const route=navigationOrder();return index===route[route.length-1]&amp;&amp;step===maxStep();}
+ function advance(){if(step&lt;maxStep()){step++;render(true);return;}const route=navigationOrder(),position=route.indexOf(index);if(position&gt;=route.length-1)return;const target=route[position+1];index=target;el(&#x27;section&#x27;).value=data[index].section;groupOptions();index=target;el(&#x27;example&#x27;).value=String(index);step=0;render();}
  function render(animate=false){
    clearTimeout(morphTimer);
    const s=makeState(animate);
    el(&#x27;label&#x27;).textContent=s.label;el(&#x27;prompt&#x27;).textContent=s.prompt;el(&#x27;sentence&#x27;).innerHTML=s.sentence;el(&#x27;rule&#x27;).innerHTML=s.rule;
    if(animate&amp;&amp;[2,4,6,8].includes(step)){const expectedIndex=index,expectedStep=step;morphTimer=setTimeout(()=&gt;{if(index===expectedIndex&amp;&amp;step===expectedStep)el(&#x27;sentence&#x27;).innerHTML=makeState(false).sentence;},1100);}
-   el(&#x27;back&#x27;).disabled=step===0;el(&#x27;next&#x27;).disabled=step===maxStep();
+   el(&#x27;back&#x27;).disabled=step===0;el(&#x27;next&#x27;).disabled=atEnd();el(&#x27;next&#x27;).textContent=atEnd()?&#x27;End of animation&#x27;:&#x27;Next →&#x27;;
    const choices=filtered();el(&#x27;count&#x27;).textContent=&#x27;Step &#x27;+(step+1)+&#x27; of &#x27;+(maxStep()+1)+&#x27; · example &#x27;+(choices.indexOf(index)+1)+&#x27; of &#x27;+choices.length;
  }
  function stop(){clearTimeout(timer);timer=null;el(&#x27;play&#x27;).textContent=&#x27;▶ Play&#x27;;}
@@ -1705,7 +1709,7 @@ html[data-visualize-standalone] #acc-lab .acc-scene {flex:1;}
  el(&#x27;section&#x27;).addEventListener(&#x27;change&#x27;,groupOptions);
  el(&#x27;group&#x27;).addEventListener(&#x27;change&#x27;,exampleOptions);
  el(&#x27;example&#x27;).addEventListener(&#x27;change&#x27;,()=&gt;{index=Number(el(&#x27;example&#x27;).value);step=0;stop();render();});
- el(&#x27;next&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{stop();step=Math.min(maxStep(),step+1);render(true);});
+ el(&#x27;next&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{stop();advance();});
  el(&#x27;back&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{stop();step=Math.max(0,step-1);render();});
  el(&#x27;replay&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{stop();step=0;render();});
  el(&#x27;another&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{const choices=filtered();index=choices[(choices.indexOf(index)+1)%choices.length];el(&#x27;example&#x27;).value=String(index);stop();step=0;render();});
